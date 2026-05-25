@@ -1,34 +1,81 @@
 # =========================================================
-# TIDE LINE — TACTICAL RADAR WALL
+# TIDE LINE — TACTICAL RADAR GRID
 # =========================================================
 
 import streamlit as st
 
 
 # =========================================================
-# RADAR WALL
+# PANEL HEADER
+# =========================================================
+
+def render_panel_header(title, subtitle):
+
+    st.markdown(
+
+        f"""
+<div style="
+background:#07111F;
+border:1px solid #13304A;
+border-radius:14px;
+padding:0.65rem 0.85rem;
+margin-bottom:0.45rem;
+">
+
+<div style="
+color:#7DD3FC;
+font-size:0.82rem;
+font-weight:800;
+letter-spacing:0.08em;
+margin-bottom:0.18rem;
+">
+
+{title}
+
+</div>
+
+<div style="
+color:#6B7C93;
+font-size:0.70rem;
+letter-spacing:0.04em;
+">
+
+{subtitle}
+
+</div>
+
+</div>
+        """,
+
+        unsafe_allow_html=True
+
+    )
+
+
+# =========================================================
+# MAIN RADAR GRID
 # =========================================================
 
 def show_radar_panel():
 
     # =====================================================
-    # HEADER
+    # SECTION HEADER
     # =====================================================
 
     st.markdown(
 
         """
 <div style="
-margin-top:1rem;
-margin-bottom:1rem;
+margin-top:0.4rem;
+margin-bottom:0.55rem;
 ">
 
 <div style="
 color:#3BD6FF;
-font-size:1rem;
+font-size:0.95rem;
 font-weight:800;
 letter-spacing:0.08em;
-margin-bottom:0.4rem;
+margin-bottom:0.20rem;
 ">
 
 🌩️ TACTICAL WEATHER RADAR
@@ -37,10 +84,11 @@ margin-bottom:0.4rem;
 
 <div style="
 color:#8FA3B8;
-font-size:0.9rem;
+font-size:0.72rem;
+letter-spacing:0.05em;
 ">
 
-LIVE NOAA RADAR • WAVE INTELLIGENCE • OFFSHORE TELEMETRY
+LIVE NOAA RADAR • WAVE ENERGY • OFFSHORE TELEMETRY
 
 </div>
 
@@ -52,43 +100,24 @@ LIVE NOAA RADAR • WAVE INTELLIGENCE • OFFSHORE TELEMETRY
     )
 
     # =====================================================
-    # RADAR GRID
+    # COMMAND GRID
     # =====================================================
 
-    radar_left, radar_right = st.columns(2)
+    left_panel, right_panel = st.columns(
+        [1, 1]
+    )
 
     # =====================================================
-    # LEFT — NOAA RADAR
+    # LEFT — RADAR
     # =====================================================
 
-    with radar_left:
+    with left_panel:
 
-        st.markdown(
+        render_panel_header(
 
-            """
-<div style="
-background:#07111F;
-border:1px solid #13304A;
-border-radius:16px;
-padding:0.75rem;
-margin-bottom:0.75rem;
-">
+            "📡 NOAA RADAR",
 
-<div style="
-color:#7DD3FC;
-font-size:0.9rem;
-font-weight:700;
-letter-spacing:0.05em;
-">
-
-📡 NOAA TACTICAL RADAR
-
-</div>
-
-</div>
-            """,
-
-            unsafe_allow_html=True
+            "PRECIPITATION • WIND • STORM MOVEMENT"
 
         )
 
@@ -100,13 +129,13 @@ letter-spacing:0.05em;
             "&detailLat=26.89"
             "&detailLon=-80.05"
             "&width=900"
-            "&height=620"
+            "&height=460"
             "&zoom=6"
             "&level=surface"
             "&overlay=radar"
             "&product=ecmwf"
-            "&menu=true"
-            "&message=true"
+            "&menu=false"
+            "&message=false"
             "&marker=true"
             "&calendar=24"
             "&pressure=true"
@@ -116,46 +145,25 @@ letter-spacing:0.05em;
             "&metricWind=kt"
             "&metricTemp=%C",
 
-            height=620
+            height=460
 
         )
 
         st.caption(
-            "Live radar, precipitation, offshore wind, and marine telemetry."
+            "Storm movement • precipitation • offshore wind flow"
         )
 
     # =====================================================
-    # RIGHT — WAVE INTELLIGENCE
+    # RIGHT — WAVE FIELD
     # =====================================================
 
-    with radar_right:
+    with right_panel:
 
-        st.markdown(
+        render_panel_header(
 
-            """
-<div style="
-background:#07111F;
-border:1px solid #13304A;
-border-radius:16px;
-padding:0.75rem;
-margin-bottom:0.75rem;
-">
+            "🌊 WAVE INTELLIGENCE",
 
-<div style="
-color:#7DD3FC;
-font-size:0.9rem;
-font-weight:700;
-letter-spacing:0.05em;
-">
-
-🌊 WAVE INTELLIGENCE
-
-</div>
-
-</div>
-            """,
-
-            unsafe_allow_html=True
+            "SEA STATE • SWELL ENERGY • PERIOD FLOW"
 
         )
 
@@ -167,13 +175,13 @@ letter-spacing:0.05em;
             "&detailLat=26.89"
             "&detailLon=-80.05"
             "&width=900"
-            "&height=620"
+            "&height=460"
             "&zoom=6"
             "&level=surface"
             "&overlay=waves"
             "&product=ecmwf"
-            "&menu=true"
-            "&message=true"
+            "&menu=false"
+            "&message=false"
             "&marker=true"
             "&calendar=24"
             "&pressure=true"
@@ -183,10 +191,10 @@ letter-spacing:0.05em;
             "&metricWind=kt"
             "&metricWave=ft",
 
-            height=620
+            height=460
 
         )
 
         st.caption(
-            "Wave height, swell intervals, offshore energy, and sea-state flow."
+            "Wave height • swell intervals • offshore energy transfer"
         )

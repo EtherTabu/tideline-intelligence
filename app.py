@@ -1,6 +1,5 @@
 # =========================================================
-# TIDE LINE | STRATEGIC COMMAND
-# FULL RESTORED BUILD
+# TIDE LINE | COMMAND CENTER CORE
 # =========================================================
 
 import streamlit as st
@@ -21,67 +20,20 @@ from src.core.orchestrator import (
 
 
 # =========================================================
+# LAYOUT ENGINE
+# =========================================================
+
+from components.layout.tactical_layout import (
+    show_tactical_layout
+)
+
+
+# =========================================================
 # COMPONENTS
 # =========================================================
 
 from components.tactical.tactical_header import (
     show_tactical_header
-)
-
-from components.ui.weather_command_bar import (
-    show_weather_command_bar
-)
-
-from components.marine.inlet_status_panel import (
-    show_inlet_status_panel
-)
-
-from components.tactical.tactical_brief_panel import (
-    show_tactical_brief_panel
-)
-
-from components.tactical.tactical_memory_panel import (
-    show_tactical_memory_panel
-)
-
-from components.ui.status_banner import (
-    status_banner
-)
-
-from components.ui.metric_card import (
-    metric_card
-)
-
-from components.tactical.strike_clock import (
-    show_strike_clock
-)
-
-from components.telemetry.telemetry_ticker import (
-    show_telemetry_ticker
-)
-
-from components.marine.radar_panel import (
-    show_radar_panel
-)
-
-from components.marine.marine_traffic import (
-    show_marine_traffic
-)
-
-from components.marine.camera_wall import (
-    show_camera_wall
-)
-
-from components.species.species_cards import (
-    show_species_cards
-)
-
-from components.tactical.tactical_panel import (
-    show_tactical_panel
-)
-
-from components.tactical.recommendations import (
-    show_recommendations
 )
 
 from components.debug.debug_panel import (
@@ -183,6 +135,21 @@ memory_data = tactical_data.get(
     []
 )
 
+tides_data = payload.get(
+    "tides",
+    {}
+)
+
+buoys_data = payload.get(
+    "buoys",
+    {}
+)
+
+synthesis_data = payload.get(
+    "synthesis",
+    {}
+)
+
 
 # =========================================================
 # FALLBACK SPECIES RECOVERY
@@ -242,211 +209,73 @@ if not species_data:
 
 
 # =========================================================
-# HEADER
+# COMMAND STATE
+# =========================================================
+
+command_state = {
+
+    "mode": tactical_data.get(
+        "mission_status",
+        "MONITOR"
+    ),
+
+    "primary_target": tactical_data.get(
+        "primary_target",
+        "UNKNOWN"
+    ),
+
+    "confidence": tactical_data.get(
+        "confidence",
+        0
+    ),
+
+    "risk": risk_data.get(
+        "risk_state",
+        "LOW"
+    )
+
+}
+
+
+# =========================================================
+# COMMAND HEADER
 # =========================================================
 
 show_tactical_header()
 
 
 # =========================================================
-# WEATHER TELEMETRY
+# MAIN COMMAND GRID
 # =========================================================
 
-show_weather_command_bar(
-    marine_data
-)
+show_tactical_layout(
 
+    command_state=command_state,
 
-# =========================================================
-# INLET STATUS
-# =========================================================
+    marine_data=marine_data,
 
-show_inlet_status_panel(
-    inlet_data
-)
+    tide_data=tides_data,
 
+    buoy_data=buoys_data,
 
-# =========================================================
-# TACTICAL BRIEF
-# =========================================================
+    risk_data=risk_data,
 
-show_tactical_brief_panel(
-    brief_data
-)
+    prediction_data=prediction_data,
 
+    tactical_data=tactical_data,
 
-# =========================================================
-# SYSTEM STATUS
-# =========================================================
+    species_data=species_data,
 
-status_banner(
+    inlet_data=inlet_data,
 
-    "TACTICAL",
+    brief_data=brief_data,
 
-    "SYSTEMS SYNCHRONIZED • COMMAND LINK ACTIVE"
+    memory_data=memory_data,
 
-)
+    synthesis_data=synthesis_data,
 
+    payload=payload
 
-# =========================================================
-# COMMAND METRICS
-# =========================================================
-
-cmd1, cmd2, cmd3, cmd4, cmd5 = st.columns(5)
-
-with cmd1:
-
-    metric_card(
-
-        "MISSION",
-
-        tactical_data.get(
-            "mission_status",
-            "MONITOR"
-        ),
-
-        "Operational posture"
-
-    )
-
-with cmd2:
-
-    metric_card(
-
-        "TARGET",
-
-        tactical_data.get(
-            "primary_target",
-            "UNKNOWN"
-        ),
-
-        "Primary species focus"
-
-    )
-
-with cmd3:
-
-    metric_card(
-
-        "CONFIDENCE",
-
-        f"{tactical_data.get('confidence', 0)}%",
-
-        "System confidence"
-
-    )
-
-with cmd4:
-
-    metric_card(
-
-        "RISK",
-
-        risk_data.get(
-            "risk_state",
-            "LOW"
-        ),
-
-        "Marine operational risk"
-
-    )
-
-with cmd5:
-
-    metric_card(
-
-        "LAUNCH",
-
-        risk_data.get(
-            "launch_viability",
-            "UNKNOWN"
-        ),
-
-        "Go / no-go assessment"
-
-    )
-
-
-# =========================================================
-# STRIKE CLOCK
-# =========================================================
-
-show_strike_clock(
-
-    prediction_data,
-    tactical_data
-
-)
-
-
-# =========================================================
-# TELEMETRY TICKER
-# =========================================================
-
-show_telemetry_ticker(
-
-    marine_data,
-    risk_data,
-    prediction_data,
-    tactical_data
-
-)
-
-
-# =========================================================
-# RADAR PANEL
-# =========================================================
-
-show_radar_panel()
-
-
-# =========================================================
-# MARINE TRAFFIC
-# =========================================================
-
-show_marine_traffic()
-
-
-# =========================================================
-# CAMERA WALL
-# =========================================================
-
-show_camera_wall()
-
-
-# =========================================================
-# SPECIES INTEL
-# =========================================================
-
-show_species_cards(
-    species_data
-)
-
-
-# =========================================================
-# TACTICAL PANEL
-# =========================================================
-
-show_tactical_panel(
-    tactical_data
-)
-
-
-# =========================================================
-# RECOMMENDATION ENGINE
-# =========================================================
-
-show_recommendations(
-    payload
-)
-
-
-# =========================================================
-# MEMORY PANEL
-# =========================================================
-
-show_tactical_memory_panel(
-    memory_data
 )
 
 

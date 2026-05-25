@@ -1,27 +1,36 @@
 # =========================================================
-# TIDE LINE — TACTICAL LAYOUT ENGINE
+# TIDE LINE — COMMAND GRID ENGINE
 # =========================================================
 
 import streamlit as st
 
-from components.telemetry.live_clock import (
-    show_live_clock
+
+# =========================================================
+# COMPONENT IMPORTS
+# =========================================================
+
+from components.ui.weather_command_bar import (
+    show_weather_command_bar
 )
 
-from components.telemetry.refresh_engine import (
-    show_refresh_status
+from components.ui.status_banner import (
+    status_banner
+)
+
+from components.ui.metric_card import (
+    metric_card
 )
 
 from components.telemetry.telemetry_ticker import (
     show_telemetry_ticker
 )
 
-from components.marine.radar_panel import (
-    show_radar_panel
+from components.tactical.strike_clock import (
+    show_strike_clock
 )
 
-from components.marine.wave_panel import (
-    show_wave_panel
+from components.marine.radar_panel import (
+    show_radar_panel
 )
 
 from components.marine.marine_traffic import (
@@ -40,6 +49,10 @@ from components.tactical.tactical_brief_panel import (
     show_tactical_brief_panel
 )
 
+from components.species.species_cards import (
+    show_species_cards
+)
+
 from components.tactical.tactical_panel import (
     show_tactical_panel
 )
@@ -48,50 +61,18 @@ from components.tactical.recommendations import (
     show_recommendations
 )
 
-from components.tactical.strike_clock import (
-    show_strike_clock
-)
-
-from components.tactical.strike_timeline import (
-    show_strike_timeline
-)
-
 from components.tactical.tactical_memory_panel import (
     show_tactical_memory_panel
 )
 
-from components.species.species_cards import (
-    show_species_cards
-)
-
-from components.ui.memory_panel import (
-    show_memory_panel
-)
-
-from components.ui.weather_command_bar import (
-    show_weather_command_bar
-)
-
-from components.ui.mission_hero import (
-    show_mission_hero
-)
-
-from components.system.system_health_bar import (
-    show_system_health_bar
-)
-
-from components.tactical.confidence_ring import (
-    render_confidence_ring
-)
-
 
 # =========================================================
-# MAIN LAYOUT
+# MAIN COMMAND GRID
 # =========================================================
 
 def show_tactical_layout(
 
-    mode,
+    command_state,
 
     marine_data,
     tide_data,
@@ -99,17 +80,124 @@ def show_tactical_layout(
     risk_data,
     prediction_data,
     tactical_data,
-    synthesis_data
+    species_data,
+    inlet_data,
+    brief_data,
+    memory_data,
+    synthesis_data,
+    payload
 
 ):
 
     # =====================================================
-    # TELEMETRY
+    # TOP TELEMETRY
     # =====================================================
 
-    show_live_clock()
+    show_weather_command_bar(
+        marine_data
+    )
 
-    show_refresh_status()
+    show_inlet_status_panel(
+        inlet_data
+    )
+
+    show_tactical_brief_panel(
+        brief_data
+    )
+
+    status_banner(
+
+        "TACTICAL",
+
+        "SYSTEMS SYNCHRONIZED • COMMAND GRID ACTIVE"
+
+    )
+
+    # =====================================================
+    # COMMAND METRICS
+    # =====================================================
+
+    cmd1, cmd2, cmd3, cmd4, cmd5 = st.columns(5)
+
+    with cmd1:
+
+        metric_card(
+
+            "MISSION",
+
+            command_state.get(
+                "mode",
+                "MONITOR"
+            ),
+
+            "Operational posture"
+
+        )
+
+    with cmd2:
+
+        metric_card(
+
+            "TARGET",
+
+            command_state.get(
+                "primary_target",
+                "UNKNOWN"
+            ),
+
+            "Primary species focus"
+
+        )
+
+    with cmd3:
+
+        metric_card(
+
+            "CONFIDENCE",
+
+            f"{command_state.get('confidence', 0)}%",
+
+            "System confidence"
+
+        )
+
+    with cmd4:
+
+        metric_card(
+
+            "RISK",
+
+            command_state.get(
+                "risk",
+                "LOW"
+            ),
+
+            "Marine operational risk"
+
+        )
+
+    with cmd5:
+
+        metric_card(
+
+            "STATE",
+
+            "ONLINE",
+
+            "Command grid status"
+
+        )
+
+    # =====================================================
+    # STRIKE TELEMETRY
+    # =====================================================
+
+    show_strike_clock(
+
+        prediction_data,
+        tactical_data
+
+    )
 
     show_telemetry_ticker(
 
@@ -121,155 +209,63 @@ def show_tactical_layout(
     )
 
     # =====================================================
-    # HERO
+    # PRIMARY BATTLEFIELD
     # =====================================================
 
-    show_mission_hero()
-
-    # =====================================================
-    # STATUS PANELS
-    # =====================================================
-
-    show_inlet_status_panel(
-        risk_data
-    )
-
-    show_tactical_brief_panel(
-        tactical_data
-    )
-
-    show_system_health_bar(
-        synthesis_data
+    battlefield_left, battlefield_right = st.columns(
+        [2.2, 1]
     )
 
     # =====================================================
-    # CONFIDENCE RINGS
+    # LEFT — RADAR STACK
     # =====================================================
 
-    r1, r2, r3 = st.columns(3)
+    with battlefield_left:
 
-    with r1:
+        show_radar_panel()
 
-        render_confidence_ring(
+        show_marine_traffic()
 
-            "MISSION",
+    # =====================================================
+    # RIGHT — TACTICAL RAIL
+    # =====================================================
 
-            tactical_data.get(
-                "confidence",
-                0
-            )
+    with battlefield_right:
 
-        )
-
-    with r2:
-
-        render_confidence_ring(
-
-            "FEEDING",
-
-            prediction_data.get(
-                "feeding_score",
-                0
-            )
-
-        )
-
-    with r3:
-
-        render_confidence_ring(
-
-            "SAFE",
-
-            max(
-
-                0,
-
-                100 - risk_data.get(
-                    "danger_score",
-                    0
-                )
-
-            )
-
+        show_species_cards(
+            species_data
         )
 
     # =====================================================
-    # COMMAND BAR
-    # =====================================================
-
-    show_weather_command_bar(
-        marine_data
-    )
-
-    # =====================================================
-    # STRIKE SYSTEMS
-    # =====================================================
-
-    show_strike_clock(
-        tactical_data
-    )
-
-    show_strike_timeline(
-        tactical_data
-    )
-
-    # =====================================================
-    # TACTICAL PANEL
-    # =====================================================
-
-    show_tactical_panel(
-        tactical_data
-    )
-
-    # =====================================================
-    # RADAR + WAVES
-    # =====================================================
-
-    show_radar_panel()
-
-    show_wave_panel()
-
-    # =====================================================
-    # MARINE TRAFFIC
-    # =====================================================
-
-    show_marine_traffic()
-
-    # =====================================================
-    # CAMERA WALL
+    # LIVE CAMERA GRID
     # =====================================================
 
     show_camera_wall()
 
     # =====================================================
-    # SPECIES
+    # LOWER TACTICAL GRID
     # =====================================================
 
-    show_species_cards(
-        prediction_data
+    lower_left, lower_right = st.columns(
+        [1.2, 1]
     )
 
-    # =====================================================
-    # RECOMMENDATIONS
-    # =====================================================
+    with lower_left:
 
-    show_recommendations(
-        tactical_data
-    )
+        show_tactical_panel(
+            tactical_data
+        )
+
+    with lower_right:
+
+        show_recommendations(
+            payload
+        )
 
     # =====================================================
-    # MEMORY
+    # MEMORY BUS
     # =====================================================
 
     show_tactical_memory_panel(
-
-        tactical_data.get(
-            "memory",
-            []
-        )
-
-    )
-
-    show_memory_panel(
-        tactical_data
+        memory_data
     )
