@@ -209,32 +209,28 @@ def show_tactical_layout(
     )
 
     # =====================================================
-    # PRIMARY BATTLEFIELD
+    # RADAR STACK
     # =====================================================
 
-    battlefield_left, battlefield_right = st.columns(
-        [2.2, 1]
+    show_radar_panel()
+
+    show_marine_traffic()
+
+    # =====================================================
+    # SPECIES INTEL
+    # =====================================================
+
+    status_banner(
+
+        "SPECIES INTEL",
+
+        "LIVE TARGET ANALYSIS"
+
     )
 
-    # =====================================================
-    # LEFT — RADAR STACK
-    # =====================================================
-
-    with battlefield_left:
-
-        show_radar_panel()
-
-        show_marine_traffic()
-
-    # =====================================================
-    # RIGHT — SPECIES INTEL RAIL
-    # =====================================================
-
-    with battlefield_right:
-
-        render_species_cards(
-            species_data
-        )
+    render_species_cards(
+        species_data
+    )
 
     # =====================================================
     # LIVE CAMERA GRID
