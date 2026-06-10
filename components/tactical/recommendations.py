@@ -6,29 +6,18 @@ import streamlit as st
 # =========================================================
 
 def detect_standing_wave_risk(
-
     tide_direction,
     swell_direction,
     swell_period,
     wave_height
-
 ):
 
-    if (
-
+    return (
         tide_direction == "OUTGOING"
-
         and swell_direction in ["E", "SE", "NE"]
-
         and swell_period >= 8
-
         and wave_height >= 3
-
-    ):
-
-        return True
-
-    return False
+    )
 
 
 # =========================================================
@@ -36,49 +25,66 @@ def detect_standing_wave_risk(
 # =========================================================
 
 def determine_launch_window(
-
     risk,
     tide_velocity,
     standing_wave
-
 ):
 
     if standing_wave:
-
         return (
             "Delay outbound transit until "
             "tidal exchange weakens."
         )
 
     if risk == "EXTREME":
-
         return (
-            "No safe launch window currently "
-            "detected."
+            "No safe launch window currently detected."
         )
 
     if risk == "HIGH":
-
         return (
-            "Use caution during peak "
-            "tidal movement."
+            "Use caution during peak tidal movement."
         )
 
     if tide_velocity == "STRONG":
-
         return (
-            "Prefer launch near slack tide "
-            "transition."
+            "Prefer launch near slack tide transition."
         )
 
     return (
-        "Current launch conditions appear "
-        "favorable."
+        "Current launch conditions appear favorable."
     )
 
 
 # =========================================================
-# MAIN RECOMMENDATION ENGINE
+# STATUS COLOR
+# =========================================================
+
+def render_status_banner(risk, standing_wave):
+
+    if standing_wave:
+        st.error(
+            "Standing-wave probability elevated."
+        )
+
+    elif risk == "EXTREME":
+        st.error(
+            "Unsafe marine operating conditions."
+        )
+
+    elif risk == "HIGH":
+        st.warning(
+            "Elevated inlet turbulence detected."
+        )
+
+    else:
+        st.success(
+            "Marine conditions currently stable."
+        )
+
+
+# =========================================================
+# MAIN ENGINE
 # =========================================================
 
 def show_recommendations(system):
@@ -99,25 +105,10 @@ def show_recommendations(system):
     # MASTER OBJECTS
     # =====================================================
 
-    marine = system.get(
-        "marine",
-        {}
-    )
-
-    tides = system.get(
-        "tides",
-        {}
-    )
-
-    risk_engine = system.get(
-        "risk",
-        {}
-    )
-
-    prediction = system.get(
-        "prediction",
-        {}
-    )
+    marine = system.get("marine", {})
+    tides = system.get("tides", {})
+    risk_engine = system.get("risk", {})
+    prediction = system.get("prediction", {})
 
     # =====================================================
     # INPUTS
@@ -175,72 +166,45 @@ def show_recommendations(system):
 
     recommendation = prediction.get(
         "recommendation",
-        "No tactical recommendation."
+        "No tactical recommendation available."
     )
 
     # =====================================================
-    # STANDING WAVE LOGIC
+    # DETECTION
     # =====================================================
 
     standing_wave = detect_standing_wave_risk(
-
         tide_direction,
         swell_direction,
         swell_period,
         wave_height
-
     )
 
-    # =====================================================
-    # LAUNCH LOGIC
-    # =====================================================
-
     launch_window = determine_launch_window(
-
         risk,
         tide_velocity,
         standing_wave
-
     )
 
     # =====================================================
-    # OPERATIONAL STATUS
+    # STATUS
     # =====================================================
 
-    if standing_wave:
-
-        st.error(
-            "Standing-wave probability elevated."
-        )
-
-    elif risk == "HIGH":
-
-        st.warning(
-            "Elevated inlet turbulence detected."
-        )
-
-    elif risk == "EXTREME":
-
-        st.error(
-            "Unsafe marine operating conditions."
-        )
-
-    else:
-
-        st.success(
-            "Marine conditions currently stable."
-        )
-
-    # =====================================================
-    # GRID
-    # =====================================================
-
-    left, center, right = st.columns(
-        [1, 2, 1]
+    render_status_banner(
+        risk,
+        standing_wave
     )
 
+    st.divider()
+
     # =====================================================
-    # LEFT PANEL
+    # MAIN GRID
+    # =====================================================
+
+    left, center, right = st.columns([1, 2, 1])
+
+    # =====================================================
+    # LEFT
     # =====================================================
 
     with left:
@@ -266,98 +230,78 @@ def show_recommendations(system):
         )
 
     # =====================================================
-    # CENTER PANEL
+    # CENTER
     # =====================================================
 
     with center:
 
-        st.markdown(
-            "### Tactical Synthesis"
+        st.subheader(
+            "Tactical Synthesis"
         )
 
         synthesis = []
 
         if tide_direction == "OUTGOING":
-
             synthesis.append(
                 "Outbound tidal pressure active."
             )
 
         if tide_direction == "INCOMING":
-
             synthesis.append(
-                "Incoming tidal energy pushing bait "
-                "toward inlet structure."
+                "Incoming tidal energy pushing bait toward structure."
             )
 
         if swell_direction in ["E", "SE", "NE"]:
-
             synthesis.append(
                 "Atlantic swell impacting inlet."
             )
 
         if standing_wave:
-
             synthesis.append(
-                "Standing-wave formation possible "
-                "near north jetty."
+                "Standing-wave formation possible near jetty zones."
             )
 
         if tide_velocity == "STRONG":
-
             synthesis.append(
                 "Peak tidal exchange currently active."
             )
 
         if feeding_score >= 80:
-
             synthesis.append(
                 "Predatory feeding probability elevated."
             )
 
         elif feeding_score >= 60:
-
             synthesis.append(
                 "Moderate bait movement detected."
             )
 
         if not synthesis:
-
             synthesis.append(
                 "Marine systems nominal."
             )
 
         for item in synthesis:
-
             st.write(f"• {item}")
 
         st.divider()
 
         # =================================================
-        # PREDICTION ENGINE
+        # PREDICTION
         # =================================================
 
-        st.markdown(
-            "### Fish Prediction Engine"
+        st.subheader(
+            "Fish Prediction Engine"
         )
 
         if feeding_score >= 85:
-
-            st.success(
-                recommendation
-            )
+            st.success(recommendation)
 
         elif feeding_score >= 65:
-
-            st.info(
-                recommendation
-            )
+            st.info(recommendation)
 
         else:
-
-            st.warning(
-                recommendation
-            )
+            st.warning(recommendation)
 
         st.markdown(
             f"**Bite Timing:** {bite_window}"
@@ -366,11 +310,11 @@ def show_recommendations(system):
         st.divider()
 
         # =================================================
-        # LAUNCH GUIDANCE
+        # LAUNCH
         # =================================================
 
-        st.markdown(
-            "### Launch Guidance"
+        st.subheader(
+            "Launch Guidance"
         )
 
         st.info(
@@ -378,7 +322,7 @@ def show_recommendations(system):
         )
 
     # =====================================================
-    # RIGHT PANEL
+    # RIGHT
     # =====================================================
 
     with right:
@@ -403,61 +347,50 @@ def show_recommendations(system):
             activity
         )
 
-    # =====================================================
-    # OPERATIONAL ALERTS
-    # =====================================================
-
     st.divider()
 
-    st.markdown(
-        "### ⚠️ Operational Alerts"
+    # =====================================================
+    # ALERTS
+    # =====================================================
+
+    st.subheader(
+        "Operational Alerts"
     )
 
     alerts = []
 
     if standing_wave:
-
         alerts.append(
-            "Standing-wave hazard elevated "
-            "during outbound flow."
+            "Standing-wave hazard elevated during outbound flow."
         )
 
     if danger_score >= 60:
-
         alerts.append(
             "Operational danger score elevated."
         )
 
     if feeding_score >= 80:
-
         alerts.append(
-            "Major feeding window detected "
-            "near tidal exchange zones."
+            "Major feeding window detected near tidal exchange zones."
         )
 
     if tide_velocity == "STRONG":
-
         alerts.append(
-            "Strong tidal velocity impacting "
-            "navigation timing."
+            "Strong tidal velocity impacting navigation timing."
         )
 
     if not alerts:
-
         alerts.append(
             "No critical marine alerts detected."
         )
 
     for alert in alerts:
-
         st.warning(alert)
 
-    # =====================================================
-    # FOOTER
-    # =====================================================
+    st.divider()
 
     st.caption(
-        "Predictive operational synthesis using "
-        "tides, swell interaction, wave energy, "
-        "feeding probability, and inlet hazard modeling."
+        "Predictive operational synthesis using tides, "
+        "swell interaction, wave energy, feeding probability, "
+        "and inlet hazard modeling."
     )

@@ -49,10 +49,6 @@ from components.tactical.tactical_brief_panel import (
     show_tactical_brief_panel
 )
 
-from components.species.species_cards import (
-    show_species_cards
-)
-
 from components.tactical.tactical_panel import (
     show_tactical_panel
 )
@@ -63,6 +59,10 @@ from components.tactical.recommendations import (
 
 from components.tactical.tactical_memory_panel import (
     show_tactical_memory_panel
+)
+
+from components.species.species_cards import (
+    render_species_cards
 )
 
 
@@ -227,12 +227,12 @@ def show_tactical_layout(
         show_marine_traffic()
 
     # =====================================================
-    # RIGHT — TACTICAL RAIL
+    # RIGHT — SPECIES INTEL RAIL
     # =====================================================
 
     with battlefield_right:
 
-        show_species_cards(
+        render_species_cards(
             species_data
         )
 

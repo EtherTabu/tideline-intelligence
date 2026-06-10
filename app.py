@@ -42,6 +42,15 @@ from components.debug.debug_panel import (
 
 
 # =========================================================
+# SPECIES ENGINE
+# =========================================================
+
+from src.services.species_engine import (
+    calculate_species_scores
+)
+
+
+# =========================================================
 # PAGE CONFIG
 # =========================================================
 
@@ -115,11 +124,6 @@ tactical_data = payload.get(
     {}
 )
 
-species_data = payload.get(
-    "species",
-    []
-)
-
 inlet_data = payload.get(
     "inlet",
     {}
@@ -152,60 +156,47 @@ synthesis_data = payload.get(
 
 
 # =========================================================
+# LIVE SPECIES ENGINE
+# =========================================================
+
+species_data = calculate_species_scores(
+
+    marine_data,
+
+    tides_data,
+
+    buoys_data,
+
+    risk_data
+
+)
+
+
+# =========================================================
 # FALLBACK SPECIES RECOVERY
 # =========================================================
 
 if not species_data:
 
-    if prediction_data:
+    fallback_species = {
 
-        fallback_species = {
+        "species": "Mahi",
 
-            "species": tactical_data.get(
-                "primary_target",
-                "SNAPPER"
-            ),
+        "score": 72,
 
-            "score": prediction_data.get(
-                "feeding_score",
-                0
-            ),
+        "activity": "HIGH",
 
-            "activity": prediction_data.get(
-                "activity",
-                "MODERATE"
-            ),
+        "depth": "BLUE WATER",
 
-            "recommendation": prediction_data.get(
-                "recommendation",
-                "Monitor marine conditions."
-            ),
+        "structure": [
+            "WEEDLINE"
+        ]
 
-            "best_window": prediction_data.get(
-                "bite_window",
-                "ACTIVE"
-            ),
+    }
 
-            "depth_zone": "OFFSHORE",
-
-            "techniques": [
-                "Live bait",
-                "Drift line",
-                "Vertical jig"
-            ],
-
-            "known_targets": [
-                "Reef edge",
-                "Artificial structure"
-            ],
-
-            "tactical_notes": [
-                "Fallback tactical synthesis active."
-            ]
-
-        }
-
-        species_data = [fallback_species]
+    species_data = [
+        fallback_species
+    ]
 
 
 # =========================================================

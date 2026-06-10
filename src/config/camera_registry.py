@@ -13,13 +13,8 @@ CAMERA_REGISTRY = [
 
         "location": "Jupiter",
 
-        "status": "LIVE",
-
-        "embed_url":
-            "https://www.youtube.com/embed/21X5lGlDOfg",
-
-        "watch_url":
-            "https://www.palmbeachinletwebcam.com/",
+        "video_url":
+            "https://www.youtube.com/watch?v=4y7kDbwBuh0",
 
         "intel":
             "Boat traffic, outgoing tide push, inlet washing.",
@@ -37,13 +32,8 @@ CAMERA_REGISTRY = [
 
         "location": "Palm Beach",
 
-        "status": "LIVE",
-
-        "embed_url":
-            "https://www.youtube.com/embed/jfKfPfyJRdk",
-
-        "watch_url":
-            "https://www.palmbeachinletwebcam.com/",
+        "video_url":
+            "https://www.youtube.com/watch?v=rdeoEeJ00xA",
 
         "intel":
             "Inlet conditions, swell stacking, vessel movement.",
@@ -53,72 +43,41 @@ CAMERA_REGISTRY = [
     },
 
     # =====================================================
-    # BOCA INLET
+    # BOCA TACTICAL CAM
     # =====================================================
 
     {
-        "name": "Boca Inlet",
+        "name": "Boca Tactical Cam",
 
         "location": "Boca Raton",
 
-        "status": "LIVE",
-
-        "embed_url":
-            "https://www.youtube.com/embed/5qap5aO4i9A",
-
-        "watch_url":
-            "https://www.thepalmbeaches.com/beachcam",
+        "video_url":
+            "https://www.youtube.com/watch?v=PeYZZinH1wI",
 
         "intel":
-            "Heavy weekend traffic and tide compression.",
+            "Water clarity, bait movement, shoreline activity.",
 
         "risk":
             "MODERATE"
     },
 
     # =====================================================
-    # PORT EVERGLADES
+    # PORT MIAMI TACTICAL COMMS
     # =====================================================
 
     {
-        "name": "Port Everglades",
+        "name": "Port Miami Tactical Comms",
 
-        "location": "Fort Lauderdale",
+        "location": "Miami Harbor",
 
-        "status": "LIVE",
-
-        "embed_url":
-            "https://www.youtube.com/embed/DjdUEyjx8GM",
+        "video_url":
+            "COMMS_NODE",
 
         "watch_url":
-            "https://www.portevergladeswebcam.com/",
+            "https://www.youtube.com/watch?v=DxZziUUr6CY",
 
         "intel":
-            "Commercial traffic, offshore exits, weather verification.",
-
-        "risk":
-            "LOW"
-    },
-
-    # =====================================================
-    # GOVERNMENT CUT
-    # =====================================================
-
-    {
-        "name": "Government Cut",
-
-        "location": "Miami",
-
-        "status": "LIVE",
-
-        "embed_url":
-            "https://www.youtube.com/embed/live_stream?channel=UC-lHJZR3Gqxm24_Vd_AJ5Yw",
-
-        "watch_url":
-            "https://www.miamiandbeaches.com/plan-your-trip/miami-webcams",
-
-        "intel":
-            "Cargo traffic, current flow, offshore visibility.",
+            "Live harbor communications, vessel movement, marine traffic monitoring.",
 
         "risk":
             "MODERATE"

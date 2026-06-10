@@ -1,14 +1,30 @@
+# =========================================================
+# TIDE LINE — TACTICAL INTELLIGENCE PANEL
+# =========================================================
+
 import streamlit as st
+
+from components.ui.tactical_card import (
+
+    tactical_title,
+    tactical_metric,
+
+    tactical_status,
+    tactical_divider,
+
+    tactical_label
+
+)
 
 
 # =========================================================
-# TIDE LINE — TACTICAL PANEL
+# PANEL
 # =========================================================
 
 def show_tactical_panel(tactical_data):
 
     # =====================================================
-    # SAFE DATA EXTRACTION
+    # SAFE EXTRACTION
     # =====================================================
 
     mission_status = tactical_data.get(
@@ -77,279 +93,329 @@ def show_tactical_panel(tactical_data):
     )
 
     # =====================================================
-    # HEADER
+    # MAIN HEADER
     # =====================================================
 
-    st.header(
-        "🛡️ Tactical Intelligence"
+    tactical_title(
+
+        "🛡 Tactical Intelligence",
+
+        "LIVE OPERATIONAL SYNTHESIS"
+
     )
 
     # =====================================================
-    # TOP STATUS BAR
+    # STATUS
     # =====================================================
 
     if mission_status == "PRIME":
 
-        st.success(
-            f"🟢 PRIME CONDITIONS | "
-            f"Primary Target: {primary_target}"
+        tactical_status(
+
+            f"PRIME CONDITIONS • TARGET: {primary_target}",
+
+            "normal"
+
         )
 
     elif mission_status == "MONITOR":
 
-        st.warning(
-            f"🟡 MONITOR CONDITIONS | "
-            f"Primary Target: {primary_target}"
+        tactical_status(
+
+            f"MONITOR CONDITIONS • TARGET: {primary_target}",
+
+            "warning"
+
         )
 
     else:
 
-        st.error(
-            f"🔴 HIGH RISK CONDITIONS | "
-            f"Primary Target: {primary_target}"
+        tactical_status(
+
+            f"HIGH RISK CONDITIONS • TARGET: {primary_target}",
+
+            "danger"
+
         )
 
-    st.info(summary)
+    st.caption(summary)
 
-    st.divider()
+    tactical_divider()
 
     # =====================================================
-    # MAIN GRID
+    # GRID
     # =====================================================
 
     left_col, right_col = st.columns([1, 1])
 
     # =====================================================
-    # LEFT COLUMN
+    # LEFT SIDE
     # =====================================================
 
     with left_col:
 
-        # =================================================
-        # MISSION STATUS
-        # =================================================
-
-        st.markdown(
-            "### 🎯 Mission Intelligence"
+        tactical_label(
+            "MISSION INTELLIGENCE"
         )
 
-        m1, m2, m3 = st.columns(3)
+        r1c1, r1c2 = st.columns(2)
 
-        with m1:
+        with r1c1:
 
-            st.metric(
-                "Confidence",
-                f"{confidence}%"
+            tactical_metric(
+                "CONFIDENCE",
+                f"{confidence}%",
+                "#00FF99"
             )
 
-            st.metric(
-                "Risk State",
-                risk_state
+            tactical_metric(
+                "RISK",
+                risk_state,
+                "#FFD24A"
             )
 
-        with m2:
+        with r1c2:
 
-            st.metric(
-                "Primary Target",
-                primary_target
+            tactical_metric(
+                "TARGET",
+                primary_target,
+                "#38BDF8"
             )
 
-            st.metric(
-                "Target Score",
-                primary_score
+            tactical_metric(
+                "SCORE",
+                primary_score,
+                "#C084FC"
             )
 
-        with m3:
+        tactical_divider()
 
-            st.metric(
-                "Launch Status",
-                launch_viability
-            )
-
-            st.metric(
-                "Traffic Level",
-                traffic_level
-            )
-
-        st.caption(
-            "Real-time tactical synthesis engine."
+        tactical_metric(
+            "LAUNCH",
+            launch_viability,
+            "#00D1FF"
         )
 
-        st.divider()
+        tactical_metric(
+            "TRAFFIC",
+            traffic_level,
+            "#FFFFFF"
+        )
 
         # =================================================
         # FEEDING WINDOW
         # =================================================
 
-        st.markdown(
-            "### 🌊 Feeding Window"
+        tactical_label(
+            "FEEDING WINDOW"
         )
 
-        st.success(
-            feeding_window
+        tactical_status(
+            feeding_window,
+            "normal"
         )
 
         st.caption(
             "Peak projected feeding activity."
         )
 
-        st.divider()
+        tactical_divider()
 
         # =================================================
         # STRIKE WINDOWS
         # =================================================
 
-        st.markdown(
-            "### ⏰ Strike Windows"
+        tactical_label(
+            "STRIKE WINDOWS"
         )
 
         if strike_windows:
 
             for window in strike_windows:
 
-                st.info(
+                tactical_status(
 
-                    f"{window.get('window')} "
-                    f"| Confidence: "
-                    f"{window.get('confidence')}%"
+                    f"{window.get('window')} • "
+                    f"{window.get('confidence')}% CONFIDENCE",
+
+                    "normal"
 
                 )
 
         else:
 
-            st.warning(
-                "No strike windows available."
+            tactical_status(
+                "NO STRIKE WINDOWS DETECTED",
+                "warning"
             )
 
-        st.caption(
-            "Projected optimal engagement periods."
-        )
-
-        st.divider()
+        tactical_divider()
 
         # =================================================
-        # BAIT ACTIVITY
+        # BAIT MIGRATION
         # =================================================
 
-        st.markdown(
-            "### 🐟 Bait Migration"
+        tactical_label(
+            "BAIT MIGRATION"
         )
 
         if bait_activity:
 
             for item in bait_activity:
 
-                st.write(f"• {item}")
+                st.markdown(
+                    f"• {item}"
+                )
 
         else:
 
-            st.info(
+            st.caption(
                 "No bait migration signals detected."
             )
 
-        st.caption(
-            "Bait movement strongly impacts "
-            "predator positioning."
-        )
-
     # =====================================================
-    # RIGHT COLUMN
+    # RIGHT SIDE
     # =====================================================
 
     with right_col:
 
-        # =================================================
-        # OPERATIONAL ALERTS
-        # =====================================================
-
-        st.markdown(
-            "### ⚠️ Operational Alerts"
+        tactical_label(
+            "OPERATIONAL ALERTS"
         )
+
+        # =================================================
+        # SAFE ALERT HANDLER
+        # =================================================
 
         if alerts:
 
             for alert in alerts:
 
-                st.warning(alert)
+                # =========================================
+                # DICT ALERTS
+                # =========================================
+
+                if isinstance(alert, dict):
+
+                    message = alert.get(
+                        "message",
+                        "Operational alert detected."
+                    )
+
+                    level = str(
+                        alert.get(
+                            "level",
+                            "TACTICAL"
+                        )
+                    ).upper()
+
+                    if level in ["DANGER", "CRITICAL"]:
+
+                        ui_level = "danger"
+
+                    elif level in ["WARNING", "CAUTION"]:
+
+                        ui_level = "warning"
+
+                    else:
+
+                        ui_level = "normal"
+
+                    tactical_status(
+                        message,
+                        ui_level
+                    )
+
+                # =========================================
+                # STRING ALERTS
+                # =========================================
+
+                else:
+
+                    tactical_status(
+                        str(alert),
+                        "warning"
+                    )
 
         else:
 
-            st.success(
-                "No operational alerts detected."
+            tactical_status(
+                "NO OPERATIONAL ALERTS",
+                "normal"
             )
 
-        st.caption(
-            "Environmental + tactical alert fusion."
-        )
-
-        st.divider()
+        tactical_divider()
 
         # =================================================
         # SYSTEM HEALTH
-        # =====================================================
+        # =================================================
 
-        st.markdown(
-            "### 📡 System Health"
+        tactical_label(
+            "SYSTEM HEALTH"
         )
 
-        s1, s2 = st.columns(2)
+        h1, h2 = st.columns(2)
 
-        with s1:
+        with h1:
 
-            st.metric(
-                "NOAA Sync",
+            tactical_metric(
+                "NOAA",
                 system_health.get(
                     "noaa",
                     "UNKNOWN"
-                )
+                ),
+                "#00FF99"
             )
 
-            st.metric(
-                "Telemetry",
+            tactical_metric(
+                "TELEMETRY",
                 system_health.get(
                     "telemetry",
                     "UNKNOWN"
-                )
+                ),
+                "#38BDF8"
             )
 
-        with s2:
+        with h2:
 
-            st.metric(
-                "Buoy Network",
+            tactical_metric(
+                "BUOYS",
                 system_health.get(
                     "buoys",
                     "UNKNOWN"
-                )
+                ),
+                "#C084FC"
             )
 
-            st.metric(
-                "Prediction Engine",
+            tactical_metric(
+                "ENGINE",
                 system_health.get(
                     "prediction",
                     "UNKNOWN"
-                )
+                ),
+                "#FFD24A"
             )
 
-        st.caption(
-            "Operational subsystem integrity."
-        )
-
     # =====================================================
-    # COMPACT ROADMAP
+    # STRATEGIC EVOLUTION
     # =====================================================
 
-    st.divider()
+    tactical_divider()
 
-    st.markdown(
-        "## 🚀 Strategic System Evolution"
+    tactical_title(
+
+        "🚀 Strategic System Evolution",
+
+        "NEXT-GENERATION MARINE INTELLIGENCE"
+
     )
 
-    roadmap1, roadmap2, roadmap3 = st.columns(3)
+    e1, e2, e3 = st.columns(3)
 
-    with roadmap1:
+    with e1:
 
-        st.markdown(
-            "### 📡 Sensor Layer"
+        tactical_label(
+            "SENSOR LAYER"
         )
 
         st.caption(
@@ -363,10 +429,10 @@ Bathymetric intelligence
 """
         )
 
-    with roadmap2:
+    with e2:
 
-        st.markdown(
-            "### 🌊 Interpretation Layer"
+        tactical_label(
+            "INTERPRETATION LAYER"
         )
 
         st.caption(
@@ -380,10 +446,10 @@ Traffic analysis
 """
         )
 
-    with roadmap3:
+    with e3:
 
-        st.markdown(
-            "### 🤖 AI Strategic Layer"
+        tactical_label(
+            "AI STRATEGIC LAYER"
         )
 
         st.caption(

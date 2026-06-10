@@ -11,23 +11,74 @@ import streamlit as st
 
 BACKGROUND = "#050816"
 
-CARD_BG = "#0B1220"
+CARD_BG = "#09111F"
+
+CARD_BG_ALT = "#0D1728"
 
 BORDER = "#1E293B"
 
 TEXT = "#E2E8F0"
 
-MUTED = "#94A3B8"
+MUTED = "#7C93B0"
 
 GREEN = "#00FF99"
 
-YELLOW = "#FACC15"
+CYAN = "#38BDF8"
+
+BLUE = "#3B82F6"
+
+YELLOW = "#D4C21A"
+
+ORANGE = "#FF9F43"
 
 RED = "#FF4D6D"
 
-BLUE = "#38BDF8"
-
 PURPLE = "#C084FC"
+
+
+# =========================================================
+# TACTICAL GRADIENTS
+# =========================================================
+
+PANEL_GRADIENT = """
+
+linear-gradient(
+135deg,
+rgba(8,15,30,0.96),
+rgba(3,8,20,0.98)
+)
+
+"""
+
+COMMAND_GRADIENT = """
+
+linear-gradient(
+90deg,
+rgba(0,255,170,0.14),
+rgba(0,120,255,0.04)
+)
+
+"""
+
+DANGER_GRADIENT = """
+
+linear-gradient(
+90deg,
+rgba(255,80,80,0.18),
+rgba(255,0,0,0.05)
+)
+
+"""
+
+SUCCESS_GRADIENT = """
+
+linear-gradient(
+90deg,
+rgba(0,255,140,0.14),
+rgba(0,255,200,0.05)
+)
+
+"""
 
 
 # =========================================================
@@ -37,15 +88,26 @@ PURPLE = "#C084FC"
 STATUS_COLORS = {
 
     "GOOD": GREEN,
+
     "MODERATE": YELLOW,
+
     "DANGER": RED,
+
     "CRITICAL": RED,
-    "LOW": BLUE,
+
+    "LOW": CYAN,
+
     "HIGH": GREEN,
+
     "EXTREME": RED,
+
     "ACTIVE": GREEN,
+
     "ONLINE": GREEN,
-    "OFFLINE": RED
+
+    "OFFLINE": RED,
+
+    "WARNING": ORANGE
 
 }
 
@@ -59,14 +121,18 @@ def configure_page():
     st.set_page_config(
 
         page_title="TIDE LINE",
+
+        page_icon="🌊",
+
         layout="wide",
+
         initial_sidebar_state="collapsed"
 
     )
 
 
 # =========================================================
-# GLOBAL CSS
+# GLOBAL CSS ENGINE
 # =========================================================
 
 def inject_global_css():
@@ -75,169 +141,255 @@ def inject_global_css():
 
         f"""
 
-        <style>
+<style>
 
-        /* =================================================
-           GLOBAL
-        ================================================= */
+/* =====================================================
+   GLOBAL
+===================================================== */
 
-        html, body, [class*="css"] {{
+html,
+body,
+[class*="css"] {{
 
-            background-color: {BACKGROUND};
-            color: {TEXT};
+    background-color: {BACKGROUND};
 
-            font-family:
-                Inter,
-                system-ui,
-                sans-serif;
+    color: {TEXT};
 
-        }}
+    font-family:
 
-        .block-container {{
+        Inter,
+        system-ui,
+        sans-serif;
 
-            padding-top: 1rem;
-            padding-bottom: 1rem;
+}}
 
-            padding-left: 1.25rem;
-            padding-right: 1.25rem;
+/* =====================================================
+   MAIN LAYOUT
+===================================================== */
 
-            max-width: 100%;
+.block-container {{
 
-        }}
+    padding-top: 0.8rem;
 
-        /* =================================================
-           REMOVE STREAMLIT CLUTTER
-        ================================================= */
+    padding-bottom: 1rem;
 
-        #MainMenu {{
-            visibility: hidden;
-        }}
+    padding-left: 1rem;
 
-        footer {{
-            visibility: hidden;
-        }}
+    padding-right: 1rem;
 
-        header {{
-            visibility: hidden;
-        }}
+    max-width: 100%;
 
-        /* =================================================
-           METRICS
-        ================================================= */
+}}
 
-        div[data-testid="metric-container"] {{
+/* =====================================================
+   REMOVE STREAMLIT CLUTTER
+===================================================== */
 
-            background-color: {CARD_BG};
+#MainMenu {{
+    visibility: hidden;
+}}
 
-            border:
-                1px solid {BORDER};
+footer {{
+    visibility: hidden;
+}}
 
-            border-radius: 12px;
+header {{
+    visibility: hidden;
+}}
 
-            padding: 0.65rem;
+/* =====================================================
+   CARDS
+===================================================== */
 
-            min-height: 72px;
+div[data-testid="stVerticalBlockBorderWrapper"] {{
 
-        }}
+    background: {PANEL_GRADIENT};
 
-        /* =================================================
-           ALERTS
-        ================================================= */
+    border:
 
-        div.stAlert {{
+        1px solid rgba(56,189,248,0.14);
 
-            border-radius: 10px;
+    border-radius: 14px;
 
-            border:
-                1px solid {BORDER};
+    box-shadow:
 
-        }}
+        0 0 0 rgba(0,0,0,0);
 
-        /* =================================================
-           EXPANDERS
-        ================================================= */
+    transition: 0.25s ease;
 
-        .streamlit-expanderHeader {{
+}}
 
-            background-color: {CARD_BG};
+div[data-testid="stVerticalBlockBorderWrapper"]:hover {{
 
-            border-radius: 8px;
+    border:
 
-            border:
-                1px solid {BORDER};
+        1px solid rgba(0,255,180,0.24);
 
-        }}
+}}
 
-        /* =================================================
-           CHART CONTAINERS
-        ================================================= */
+/* =====================================================
+   METRICS
+===================================================== */
 
-        iframe {{
+div[data-testid="metric-container"] {{
 
-            border-radius: 12px;
+    background: {PANEL_GRADIENT};
 
-            border:
-                1px solid {BORDER};
+    border:
 
-        }}
+        1px solid rgba(56,189,248,0.12);
 
-        /* =================================================
-           TIGHTER SPACING
-        ================================================= */
+    border-radius: 12px;
 
-        section.main > div {{
+    padding: 0.75rem;
 
-            padding-top: 0rem;
+}}
 
-        }}
+/* =====================================================
+   ALERTS
+===================================================== */
 
-        hr {{
+div.stAlert {{
 
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
+    border-radius: 10px;
 
-            border-color: {BORDER};
+    border:
 
-        }}
+        1px solid rgba(56,189,248,0.14);
 
-        /* =================================================
-           HEADERS
-        ================================================= */
+}}
 
-        h1, h2, h3, h4 {{
+/* =====================================================
+   BUTTONS
+===================================================== */
 
-            color: {TEXT};
+.stButton > button {{
 
-            letter-spacing: -0.02em;
+    background:
 
-        }}
+        rgba(0,0,0,0);
 
-        h1 {{
-            font-size: 2rem;
-        }}
+    border:
 
-        h2 {{
-            font-size: 1.3rem;
-        }}
+        1px solid rgba(56,189,248,0.22);
 
-        h3 {{
-            font-size: 1rem;
-        }}
+    color: {TEXT};
 
-        /* =================================================
-           SIDEBAR
-        ================================================= */
+    border-radius: 10px;
 
-        section[data-testid="stSidebar"] {{
+    transition: 0.25s ease;
 
-            background-color: {CARD_BG};
+}}
 
-            border-right:
-                1px solid {BORDER};
+.stButton > button:hover {{
 
-        }}
+    border:
 
-        </style>
+        1px solid rgba(0,255,180,0.38);
+
+    color: white;
+
+}}
+
+/* =====================================================
+   VIDEO / IFRAMES
+===================================================== */
+
+iframe,
+video {{
+
+    border-radius: 14px !important;
+
+    overflow: hidden !important;
+
+}}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+section[data-testid="stSidebar"] {{
+
+    background:
+
+        {CARD_BG};
+
+    border-right:
+
+        1px solid rgba(56,189,248,0.12);
+
+}}
+
+/* =====================================================
+   TYPOGRAPHY
+===================================================== */
+
+h1,
+h2,
+h3,
+h4 {{
+
+    color: {TEXT};
+
+    letter-spacing: -0.02em;
+
+}}
+
+h1 {{
+    font-size: 2rem;
+}}
+
+h2 {{
+    font-size: 1.35rem;
+}}
+
+h3 {{
+    font-size: 1rem;
+}}
+
+/* =====================================================
+   DIVIDERS
+===================================================== */
+
+hr {{
+
+    border-color:
+
+        rgba(56,189,248,0.08);
+
+}}
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
+::-webkit-scrollbar {{
+
+    width: 10px;
+
+}}
+
+::-webkit-scrollbar-track {{
+
+    background: #040B16;
+
+}}
+
+::-webkit-scrollbar-thumb {{
+
+    background: #12304D;
+
+    border-radius: 12px;
+
+}}
+
+::-webkit-scrollbar-thumb:hover {{
+
+    background: #1D4F7A;
+
+}}
+
+</style>
 
         """,
 
@@ -253,11 +405,13 @@ def inject_global_css():
 def get_status_color(status):
 
     if not status:
+
         return MUTED
 
     return STATUS_COLORS.get(
 
         str(status).upper(),
+
         MUTED
 
     )
