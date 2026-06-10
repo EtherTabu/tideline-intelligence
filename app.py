@@ -42,11 +42,15 @@ from components.debug.debug_panel import (
 
 
 # =========================================================
-# SPECIES ENGINE
+# SPECIES ENGINES
 # =========================================================
 
 from src.services.species_engine import (
     calculate_species_scores
+)
+
+from src.services.species_matrix_engine import (
+    build_species_matrix
 )
 
 
@@ -173,6 +177,15 @@ species_data = calculate_species_scores(
 
 
 # =========================================================
+# SPECIES OPPORTUNITY MATRIX
+# =========================================================
+
+species_matrix = build_species_matrix(
+    marine_data
+)
+
+
+# =========================================================
 # FALLBACK SPECIES RECOVERY
 # =========================================================
 
@@ -256,6 +269,8 @@ show_tactical_layout(
     tactical_data=tactical_data,
 
     species_data=species_data,
+
+    species_matrix=species_matrix,
 
     inlet_data=inlet_data,
 

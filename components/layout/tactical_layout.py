@@ -80,7 +80,10 @@ def show_tactical_layout(
     risk_data,
     prediction_data,
     tactical_data,
+
     species_data,
+    species_matrix,
+
     inlet_data,
     brief_data,
     memory_data,
