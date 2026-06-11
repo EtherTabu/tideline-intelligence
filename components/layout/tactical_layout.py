@@ -65,6 +65,10 @@ from components.species.species_cards import (
     render_species_cards
 )
 
+from components.species.species_matrix import (
+    render_species_matrix
+)
+
 
 # =========================================================
 # MAIN COMMAND GRID
@@ -218,6 +222,22 @@ def show_tactical_layout(
     show_radar_panel()
 
     show_marine_traffic()
+
+    # =====================================================
+    # SPECIES OPPORTUNITY MATRIX
+    # =====================================================
+
+    status_banner(
+
+        "SPECIES OPPORTUNITY MATRIX",
+
+        "LIVE SPECIES RANKINGS • CONDITIONS • OPPORTUNITIES"
+
+    )
+
+    render_species_matrix(
+        species_matrix
+    )
 
     # =====================================================
     # SPECIES INTEL

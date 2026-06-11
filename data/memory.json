@@ -1102,5 +1102,17 @@
     "danger_score": 10,
     "wave_height": null,
     "wind_speed": null
+  },
+  {
+    "timestamp": "2026-06-10 20:07:38.846600",
+    "mission_status": "MONITOR",
+    "primary_target": "SNAPPER",
+    "confidence": 74,
+    "feeding_score": 75,
+    "activity": "HIGH",
+    "risk_state": "LOW",
+    "danger_score": 10,
+    "wave_height": null,
+    "wind_speed": null
   }
 ]
