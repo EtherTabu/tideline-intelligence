@@ -6,7 +6,7 @@ import streamlit as st
 
 from datetime import datetime
 
-from components.pulse_status import (
+from components.telemetry.pulse_status import (
     show_pulse_status
 )
 
