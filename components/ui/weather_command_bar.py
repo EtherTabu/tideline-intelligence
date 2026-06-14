@@ -65,6 +65,17 @@ def show_weather_command_bar(marine):
         "--"
     )
 
+    simulated_extras = marine.get(
+        "simulated_extras",
+        []
+    )
+
+    source_label = (
+        "CANONICAL + SIM EXTRAS"
+        if simulated_extras
+        else "CANONICAL TELEMETRY"
+    )
+
     # =====================================================
     # BAR
     # =====================================================
@@ -273,7 +284,7 @@ color:#8FA3B8;
 font-size:0.62rem;
 letter-spacing:0.08em;
 ">
-LIVE TELEMETRY
+{source_label}
 </div>
 
 <div style="

@@ -79,6 +79,7 @@ def show_tactical_layout(
     command_state,
 
     marine_data,
+    dashboard_marine_data,
     tide_data,
     buoy_data,
     risk_data,
@@ -101,7 +102,7 @@ def show_tactical_layout(
     # =====================================================
 
     show_weather_command_bar(
-        marine_data
+        dashboard_marine_data
     )
 
     show_inlet_status_panel(
@@ -208,7 +209,7 @@ def show_tactical_layout(
 
     show_telemetry_ticker(
 
-        marine_data,
+        dashboard_marine_data,
         risk_data,
         prediction_data,
         tactical_data
@@ -278,7 +279,8 @@ def show_tactical_layout(
     with lower_right:
 
         show_recommendations(
-            payload
+            payload,
+            dashboard_marine_data
         )
 
     # =====================================================

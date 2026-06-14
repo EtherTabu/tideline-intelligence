@@ -10,6 +10,10 @@ from src.services.marine_service import (
     get_simulated_marine_conditions
 )
 
+from src.services.dashboard_adapter import (
+    build_dashboard_marine_payload
+)
+
 from src.services.inlet_engine import (
     analyze_inlet_conditions
 )
@@ -89,19 +93,7 @@ def run_command_center():
     )
 
     logger.warning(
-        "[ORCHESTRATOR] Dashboard marine compatibility payload is simulated."
-    )
-
-    # =====================================================
-    # INLET ANALYSIS
-    # =====================================================
-
-    inlet_status = safe_dict(
-
-        analyze_inlet_conditions(
-            marine
-        )
-
+        "[ORCHESTRATOR] Legacy marine payload is simulated."
     )
 
     # =====================================================
@@ -130,6 +122,33 @@ def run_command_center():
 
     synthesis = safe_dict(
         system.get("synthesis")
+    )
+
+    # =====================================================
+    # CANONICAL DASHBOARD ADAPTER
+    # =====================================================
+
+    dashboard_marine = safe_dict(
+
+        build_dashboard_marine_payload(
+            canonical_marine,
+            tides,
+            buoys,
+            marine
+        )
+
+    )
+
+    # =====================================================
+    # INLET ANALYSIS
+    # =====================================================
+
+    inlet_status = safe_dict(
+
+        analyze_inlet_conditions(
+            dashboard_marine
+        )
+
     )
 
     # =====================================================
@@ -201,7 +220,7 @@ def run_command_center():
     tactical_brief = safe_dict(
 
         build_tactical_brief(
-            marine,
+            dashboard_marine,
             inlet_status,
             prediction,
             tactical
@@ -341,6 +360,14 @@ def run_command_center():
 
         "updated": marine.get(
             "timestamp",
+            dashboard_marine.get(
+                "timestamp",
+                "--"
+            )
+        ),
+
+        "dashboard_updated": dashboard_marine.get(
+            "timestamp",
             "--"
         ),
 
@@ -370,11 +397,16 @@ def run_command_center():
 
         "dashboard_marine": {
 
-            "source": "src.services.marine_service",
+            "source": "src.services.dashboard_adapter",
 
-            "source_type": "simulated",
+            "source_type": "canonical_adapter",
 
-            "is_simulated": True
+            "is_simulated": False,
+
+            "simulated_extras": dashboard_marine.get(
+                "simulated_extras",
+                []
+            )
 
         }
 
@@ -414,7 +446,7 @@ def run_command_center():
 
         "canonical_marine": canonical_marine,
 
-        "dashboard_marine": marine,
+        "dashboard_marine": dashboard_marine,
 
         "tides": tides,
 

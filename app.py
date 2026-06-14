@@ -118,6 +118,11 @@ canonical_marine_data = payload.get(
     marine_data
 )
 
+dashboard_marine_data = payload.get(
+    "dashboard_marine",
+    marine_data
+)
+
 risk_data = payload.get(
     "risk",
     {}
@@ -186,7 +191,7 @@ species_data = calculate_species_scores(
 # =========================================================
 
 species_matrix = build_species_matrix(
-    marine_data
+    dashboard_marine_data
 )
 
 
@@ -262,6 +267,8 @@ show_tactical_layout(
     command_state=command_state,
 
     marine_data=marine_data,
+
+    dashboard_marine_data=dashboard_marine_data,
 
     tide_data=tides_data,
 

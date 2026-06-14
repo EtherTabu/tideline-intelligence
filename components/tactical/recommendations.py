@@ -84,10 +84,115 @@ def render_status_banner(risk, standing_wave):
 
 
 # =========================================================
+# INPUT ADAPTER
+# =========================================================
+
+def build_recommendation_inputs(
+    system,
+    dashboard_marine=None
+):
+
+    system = (
+        system
+        if isinstance(system, dict)
+        else {}
+    )
+
+    marine = (
+        dashboard_marine
+        if isinstance(dashboard_marine, dict)
+        else system.get(
+            "dashboard_marine",
+            system.get("marine", {})
+        )
+    )
+
+    risk_engine = system.get(
+        "risk",
+        {}
+    )
+    prediction = system.get(
+        "prediction",
+        {}
+    )
+
+    return {
+
+        "risk": risk_engine.get(
+            "risk_state",
+            risk_engine.get(
+                "risk",
+                "LOW"
+            )
+        ),
+
+        "danger_score": risk_engine.get(
+            "danger_score",
+            0
+        ),
+
+        "tide_direction": marine.get(
+            "tide_flow",
+            marine.get(
+                "tide_state",
+                "UNKNOWN"
+            )
+        ),
+
+        "tide_velocity": marine.get(
+            "tidal_velocity",
+            marine.get(
+                "velocity",
+                "UNKNOWN"
+            )
+        ),
+
+        "swell_direction": marine.get(
+            "swell_direction",
+            "UNKNOWN"
+        ),
+
+        "swell_period": marine.get(
+            "swell_period",
+            0
+        ),
+
+        "wave_height": marine.get(
+            "wave_height",
+            0
+        ),
+
+        "feeding_score": prediction.get(
+            "feeding_score",
+            0
+        ),
+
+        "activity": prediction.get(
+            "activity",
+            "LOW"
+        ),
+
+        "bite_window": prediction.get(
+            "bite_window",
+            "UNKNOWN"
+        ),
+
+        "recommendation": prediction.get(
+            "recommendation",
+            "No tactical recommendation available."
+        )
+
+    }
+
+
+# =========================================================
 # MAIN ENGINE
 # =========================================================
 
-def show_recommendations(system):
+def show_recommendations(
+    system,
+    dashboard_marine=None
+):
 
     st.markdown(
         "## Operational Recommendation Engine"
@@ -102,72 +207,25 @@ def show_recommendations(system):
         return
 
     # =====================================================
-    # MASTER OBJECTS
-    # =====================================================
-
-    marine = system.get("marine", {})
-    tides = system.get("tides", {})
-    risk_engine = system.get("risk", {})
-    prediction = system.get("prediction", {})
-
-    # =====================================================
     # INPUTS
     # =====================================================
 
-    risk = risk_engine.get(
-        "risk",
-        "LOW"
+    inputs = build_recommendation_inputs(
+        system,
+        dashboard_marine
     )
 
-    danger_score = risk_engine.get(
-        "danger_score",
-        0
-    )
-
-    tide_direction = tides.get(
-        "tide_flow",
-        "UNKNOWN"
-    )
-
-    tide_velocity = tides.get(
-        "velocity",
-        "UNKNOWN"
-    )
-
-    swell_direction = marine.get(
-        "swell_direction",
-        "UNKNOWN"
-    )
-
-    swell_period = marine.get(
-        "swell_period",
-        0
-    )
-
-    wave_height = marine.get(
-        "wave_height",
-        0
-    )
-
-    feeding_score = prediction.get(
-        "feeding_score",
-        0
-    )
-
-    activity = prediction.get(
-        "activity",
-        "LOW"
-    )
-
-    bite_window = prediction.get(
-        "bite_window",
-        "UNKNOWN"
-    )
-
-    recommendation = prediction.get(
-        "recommendation",
-        "No tactical recommendation available."
-    )
+    risk = inputs["risk"]
+    danger_score = inputs["danger_score"]
+    tide_direction = inputs["tide_direction"]
+    tide_velocity = inputs["tide_velocity"]
+    swell_direction = inputs["swell_direction"]
+    swell_period = inputs["swell_period"]
+    wave_height = inputs["wave_height"]
+    feeding_score = inputs["feeding_score"]
+    activity = inputs["activity"]
+    bite_window = inputs["bite_window"]
+    recommendation = inputs["recommendation"]
 
     # =====================================================
     # DETECTION

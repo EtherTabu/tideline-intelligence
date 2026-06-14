@@ -21,18 +21,12 @@ def build_tactical_feed(
 ):
 
     wind_speed = marine_data.get(
-        "wind",
-        {}
-    ).get(
-        "speed_mph",
+        "wind_speed",
         0
     )
 
     wave_height = marine_data.get(
-        "sea_state",
-        {}
-    ).get(
-        "wave_height_ft",
+        "wave_height",
         0
     )
 
