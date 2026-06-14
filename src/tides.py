@@ -214,6 +214,8 @@ def get_tides():
 
                 "tidal_range": 0,
 
+                "tidal_range_ft": 0,
+
                 "slack_windows": [],
 
                 "incoming_windows": [],
@@ -254,6 +256,8 @@ def get_tides():
                 "time": current["t"],
 
                 "height": current_height,
+
+                "height_ft": current_height,
 
                 "direction": direction,
 
@@ -335,6 +339,8 @@ def get_tides():
 
             "tidal_range": tidal_range,
 
+            "tidal_range_ft": tidal_range,
+
             "slack_windows": slack_windows,
 
             "incoming_windows": incoming_windows,
@@ -358,6 +364,8 @@ def get_tides():
             "min_tide": 0,
 
             "tidal_range": 0,
+
+            "tidal_range_ft": 0,
 
             "slack_windows": [],
 

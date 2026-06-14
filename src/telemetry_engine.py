@@ -38,7 +38,7 @@ def build_telemetry():
         "regional": {
 
             "wave_height_ft": buoy_data.get(
-                "wave_height_ft",
+                "regional_wave_height_ft",
                 marine_api.get(
                     "wave_height",
                     0
@@ -46,7 +46,7 @@ def build_telemetry():
             ),
 
             "wave_period_sec": buoy_data.get(
-                "wave_period_sec",
+                "regional_swell_period_sec",
                 marine_api.get(
                     "wave_period",
                     0

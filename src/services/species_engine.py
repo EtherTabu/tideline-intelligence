@@ -2,12 +2,8 @@
 # TIDE LINE | MASTER SPECIES ENGINE
 # =========================================================
 
-from src.species_engines.snapper_engine import (
-    calculate_snapper_score
-)
-
-from src.species_engines.mahi_engine import (
-    calculate_mahi_score
+from src.config.species_registry import (
+    run_species_engines
 )
 
 
@@ -24,57 +20,34 @@ def calculate_species_scores(
 
 ):
 
-    results = []
+    registry_results = run_species_engines(
 
-    # =====================================================
-    # SNAPPER
-    # =====================================================
+        marine,
+        tides,
+        buoys,
+        risk
 
-    try:
+    )
 
-        snapper = calculate_snapper_score(
+    if not isinstance(
+        registry_results,
+        dict
+    ):
 
-            marine,
-            tides,
-            buoys,
-            risk
+        return []
 
+    results = [
+
+        value
+
+        for value in registry_results.values()
+
+        if isinstance(
+            value,
+            dict
         )
 
-        results.append(
-            snapper
-        )
-
-    except Exception as e:
-
-        print(
-            f"[SPECIES ENGINE] SNAPPER FAILED: {e}"
-        )
-
-    # =====================================================
-    # MAHI
-    # =====================================================
-
-    try:
-
-        mahi = calculate_mahi_score(
-
-            marine,
-            tides,
-            buoys,
-            risk
-
-        )
-
-        results.append(
-            mahi
-        )
-
-    except Exception as e:
-
-        print(
-            f"[SPECIES ENGINE] MAHI FAILED: {e}"
-        )
+    ]
 
     # =====================================================
     # SORT

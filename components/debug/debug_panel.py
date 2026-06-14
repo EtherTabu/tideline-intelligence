@@ -39,3 +39,15 @@ def show_debug_panel(payload):
         st.subheader("MARINE")
 
         st.write(payload.get("marine"))
+
+        st.subheader("CANONICAL MARINE")
+
+        st.write(payload.get("canonical_marine"))
+
+        st.subheader("DASHBOARD MARINE")
+
+        st.write(payload.get("dashboard_marine"))
+
+        st.subheader("TELEMETRY SOURCE META")
+
+        st.write(payload.get("telemetry_meta"))

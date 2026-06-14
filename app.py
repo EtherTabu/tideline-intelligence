@@ -113,6 +113,11 @@ marine_data = payload.get(
     {}
 )
 
+canonical_marine_data = payload.get(
+    "canonical_marine",
+    marine_data
+)
+
 risk_data = payload.get(
     "risk",
     {}
@@ -165,7 +170,7 @@ synthesis_data = payload.get(
 
 species_data = calculate_species_scores(
 
-    marine_data,
+    canonical_marine_data,
 
     tides_data,
 

@@ -5,16 +5,42 @@
 import random
 from datetime import datetime
 
+from src.utils.logger import logger
+
 
 # =========================================================
 # LIVE MARINE PAYLOAD
 # =========================================================
 
-def get_marine_conditions():
+def get_simulated_marine_conditions():
 
     now = datetime.now()
 
+    logger.info(
+        "[MARINE SERVICE] Simulated marine telemetry generated."
+    )
+
     payload = {
+
+        # =============================================
+        # SOURCE
+        # =============================================
+
+        "source": "SIMULATED",
+
+        "source_type": "simulated",
+
+        "is_simulated": True,
+
+        "_meta": {
+
+            "source": "src.services.marine_service",
+
+            "source_type": "simulated",
+
+            "is_simulated": True
+
+        },
 
         # =============================================
         # WIND
@@ -106,3 +132,12 @@ def get_marine_conditions():
     }
 
     return payload
+
+
+# =========================================================
+# LEGACY ALIAS
+# =========================================================
+
+def get_marine_conditions():
+
+    return get_simulated_marine_conditions()

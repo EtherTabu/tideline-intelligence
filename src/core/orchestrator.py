@@ -7,7 +7,7 @@ from datetime import datetime
 from src.utils.marine_engine import build_marine_system
 
 from src.services.marine_service import (
-    get_marine_conditions
+    get_simulated_marine_conditions
 )
 
 from src.services.inlet_engine import (
@@ -34,6 +34,8 @@ from src.services.memory_engine import (
     store_snapshot,
     get_recent_snapshots
 )
+
+from src.utils.logger import logger
 
 
 # =========================================================
@@ -74,8 +76,20 @@ def run_command_center():
     # LIVE MARINE CONDITIONS
     # =====================================================
 
+    canonical_marine = safe_dict(
+        system.get("marine")
+    )
+
+    logger.info(
+        "[ORCHESTRATOR] Canonical marine payload loaded."
+    )
+
     marine = safe_dict(
-        get_marine_conditions()
+        get_simulated_marine_conditions()
+    )
+
+    logger.warning(
+        "[ORCHESTRATOR] Dashboard marine compatibility payload is simulated."
     )
 
     # =====================================================
@@ -140,7 +154,7 @@ def run_command_center():
         classify_alerts(
             risk,
             prediction,
-            marine
+            canonical_marine
         )
 
     )
@@ -156,7 +170,7 @@ def run_command_center():
         build_strike_windows(
             prediction,
             tides,
-            marine,
+            canonical_marine,
             risk
         )
 
@@ -205,12 +219,16 @@ def run_command_center():
             tactical,
             prediction,
             risk,
-            marine
+            canonical_marine
         )
 
     except Exception as e:
 
         tactical["memory_error"] = str(e)
+
+        logger.exception(
+            "[ORCHESTRATOR] Memory snapshot storage failed."
+        )
 
     # =====================================================
     # MEMORY EXPORT
@@ -225,6 +243,10 @@ def run_command_center():
     except Exception:
 
         memory = []
+
+        logger.exception(
+            "[ORCHESTRATOR] Recent memory snapshot load failed."
+        )
 
     tactical["memory"] = memory
 
@@ -331,6 +353,34 @@ def run_command_center():
     }
 
     # =====================================================
+    # TELEMETRY SOURCE METADATA
+    # =====================================================
+
+    telemetry_meta = {
+
+        "canonical_marine": {
+
+            "source": "src.utils.marine_engine.build_marine_system",
+
+            "source_type": "live_or_cached",
+
+            "is_simulated": False
+
+        },
+
+        "dashboard_marine": {
+
+            "source": "src.services.marine_service",
+
+            "source_type": "simulated",
+
+            "is_simulated": True
+
+        }
+
+    }
+
+    # =====================================================
     # SYSTEM HEALTH BUS
     # =====================================================
 
@@ -362,6 +412,10 @@ def run_command_center():
 
         "marine": marine,
 
+        "canonical_marine": canonical_marine,
+
+        "dashboard_marine": marine,
+
         "tides": tides,
 
         "buoys": buoys,
@@ -389,6 +443,8 @@ def run_command_center():
         "memory": memory,
 
         "telemetry": telemetry,
+
+        "telemetry_meta": telemetry_meta,
 
         "system_health": system_health
 
